@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Header from "@/components/ui/header";
+import Sidebar from "../components/ui/Sidebar";
+import "@/lib/fontawesome";
 import "./globals.css";
-
+import { SidebarProvider } from "@/Context/sidebarContext";
+import SummaryCard from "@/components/ui/summary_card";
+import { Summary } from "@/service/api/services/getSummary";
+const stats = await Summary.getSummary();
 const geistSans = Geist({
+
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
@@ -24,11 +31,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      
+      <head>
+        <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  /></head>
+
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+      ><div className="md:grid  md:grid-rows-[auto_1fr] md:grid-cols-[250px_1fr] h-screen">
+        <SidebarProvider>
+          
+      <div className="md:order-3 row-span-full bg-[#f6f6f6] md:p-3 "><Sidebar /></div>
+      <div className="md:order-1 bg-[#f6f6f6]  md:h-fit  "><Header/><SummaryCard stats = {stats} /></div>
+        <div className="md:order-4 md:overflow-y-auto ">  
         {children}
+        </div>
+        
+         </SidebarProvider>
+         </div>
       </body>
     </html>
+    
   );
 }
