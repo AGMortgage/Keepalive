@@ -1,13 +1,14 @@
 "use client"
 
-import { dashboard } from "@/types/dashboard";
-interface CardProps {
-  stats: dashboard;
-}
-export default function SummaryCard ({stats}: CardProps) {
+
+import usePolling from "@/hooks/usePolling";
+import { usePollingContext } from '@/Context/pollingContext';
 
 
- 
+
+export default function SummaryCard () {
+  
+  const {pollDashboard } = usePollingContext()
  
    
     return (
@@ -21,7 +22,7 @@ export default function SummaryCard ({stats}: CardProps) {
                 <div className="rounded-lg p-4 bg-white">
                     
                         <div className="text-center font-bold " >Total Services</div>
-                        <div className="text-center text-blue-600 font-bold">{stats?.totalServices}</div>
+                        <div className="text-center text-blue-600 font-bold">{pollDashboard?.totalServices}</div>
 
                    
 
@@ -29,7 +30,7 @@ export default function SummaryCard ({stats}: CardProps) {
                 <div className="rounded-lg p-4 bg-white">
                     
                         <div className="text-center font-bold" >Total Up</div>
-                        <div className="text-center text-green-600 font-bold">{stats?.latestChecks?.filter(x => x.status === "UP").length ?? 0}</div>
+                        <div className="text-center text-green-600 font-bold">{pollDashboard?.services?.filter(x => x.status === "UP").length ?? 0}</div>
 
                    
 
@@ -37,7 +38,7 @@ export default function SummaryCard ({stats}: CardProps) {
                 <div className="rounded-lg p-4 bg-white">
                     
                         <div className="text-center font-bold" >Total Down</div>
-                        <div className="text-center text-red-600  font-bold">{stats?.latestChecks?.filter(x => x.status === "DOWN").length ?? 0}</div>
+                        <div className="text-center text-red-600  font-bold">{pollDashboard?.services?.filter(x => x.status === "DOWN").length ?? 0}</div>
 
                    
 
@@ -45,19 +46,12 @@ export default function SummaryCard ({stats}: CardProps) {
                 <div className="rounded-lg p-4 bg-white">
                     
                         <div className="text-center font-bold" >Total Checks</div>
-                        <div className="text-center  font-bold">{stats?.totalChecks}</div>
+                        <div className="text-center  font-bold">{pollDashboard?.totalChecks}</div>
 
                    
 
                 </div>
-                <div className="rounded-lg p-4 bg-white">
-                    
-                        <div className="text-center font-bold" >Latest Check</div>
-                        <div className="text-center  font-bold">{stats?.latestChecksCount}</div>
-
-                   
-
-                </div>
+                
                  
                 
             </div>

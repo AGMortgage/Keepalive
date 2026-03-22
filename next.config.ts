@@ -2,7 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  allowedDevOrigins: ["192.168.137.1"],
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://agmbkeep.runasp.net/api/:path*",
+      },
+    ];
+  },
 };
+
 
 export default nextConfig;

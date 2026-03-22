@@ -2,42 +2,55 @@
 import Link from 'next/link';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Input } from "./input"
-import { faSearch } from "@fortawesome/free-solid-svg-icons"
-import { faFilter } from "@fortawesome/free-solid-svg-icons"
+import { faSearch, faFilter,faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "./button"
 import { Badge } from "@/components/ui/badge"
 
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { DropdownMenu,DropdownMenuContent,DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger, } from "./dropdown-menu";
 
 
 import { search } from "@/types/dashboard"
-import { useState } from "react"
+import {  useState } from "react"
 import { Summary } from "@/service/api/services/getSummary"
 import { Link2 } from 'lucide-react';
+import { usePollingContext } from '@/Context/pollingContext';
 
 
-interface SearchBoxProps {
-  categories: string[];
-  services: search[];
-}
-export default function SearchBox({ categories, services }: SearchBoxProps) {
-  const [filteredServices, setFilteredServices] = useState<search[]>(services);
 
-  const handleCategoryClick = async (category: string) => {
-    const data = await Summary.getByCategories(category);
-    setFilteredServices(data);
-  };
+
+export default function SearchBox() {
+  const {pollServices,pollCategories } = usePollingContext()
+  
+  
+  
+  const [filteredServices, setFilteredServices] = useState<search[]>(pollServices);
+
+  
+      
+      const data = filteredServices
+
+      // const seeMore = () =>{
+      //   const data = filteredServices.slice(0,5)
+      // }
+      // const seeLess = () => {
+      //   const data = filteredServices
+      // }
+    
+  
+ 
   const handleStatusClick = (status: string) => {
-  setFilteredServices(services.filter((service) => service.status === status));
+  setFilteredServices(pollServices.filter((pollServices) => pollServices.status === status));
 };  
-
+ const handleCategoryClick = async (pollCategories : string) => {
+    const data = await Summary.getByCategories(pollCategories);
+    setFilteredServices(data);}
+    
  const handleSearch = (value: string) => {
   
   setFilteredServices(
     !value.trim()
-      ? services // if empty, reset to all services
-      : services.filter((service) => {
+      ? pollServices
+      : pollServices.filter((service) => {
           const cleanInput = value.trim().toLowerCase();
           const serviceName = service.name.trim().toLowerCase();
           return (
@@ -49,7 +62,6 @@ export default function SearchBox({ categories, services }: SearchBoxProps) {
 };
  
  
-
 
 
 
@@ -75,9 +87,9 @@ export default function SearchBox({ categories, services }: SearchBoxProps) {
                   </DropdownMenuTrigger >
                     <DropdownMenuContent>
                       <DropdownMenuGroup>
-                        { categories.map((category ) =>(
-                         <DropdownMenuItem  textValue={category} key={category} onSelect={() => handleCategoryClick(category)}>
-                          {category}
+                        { pollCategories.map((pollCategories ) =>(
+                         <DropdownMenuItem  textValue={pollCategories} key={pollCategories} onSelect={() => handleCategoryClick(pollCategories)}>
+                          {pollCategories}
                          </DropdownMenuItem>
                          ))}
                       </DropdownMenuGroup>
@@ -107,9 +119,10 @@ export default function SearchBox({ categories, services }: SearchBoxProps) {
                
             </div>
             </div>
-             <div className="overflow-x-auto w-full border mt-2 rounded-lg bg-white md:mt-5">
+             <div className="overflow-x-auto w-full border mt-2 rounded-lg bg-white md:mt-5 h-60 overflow-y-auto ">
+                   <div className="sticky top-0 border-t-2 border-t-black bg-white z-10"></div>
                    <table className="w-full whitespace-nowrap ">
-    <thead className="border-b-2 border-t-4 border-t-black ">
+    <thead className="border-b-2 border-t-2 border-t-black sticky top-0 z-10 bg-white">
       <tr className="text-sm text-black text-center border-b ">
         <th className="font-medium p-2">Service</th>
         <th className="font-medium p-2">Status</th>
@@ -120,14 +133,14 @@ export default function SearchBox({ categories, services }: SearchBoxProps) {
       </tr>
     </thead>
      <tbody>
-  {filteredServices.map((services) => (
-    <tr key={services.id} className="text-center border-b">
-      <td className="p-2">{services.name}</td>
-      <Badge className={`${services.status === 'UP'? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300":"bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"}`} >{services.status}</Badge>
-      <td className="p-2">{services.category}</td>
-      <td className="p-2 whitespace-nowrap">{services.last_ping}</td>
-      <td className="p-2 whitespace-nowrap">{services.response_time}</td>
-      <td className="p-2 text-blue-500"><Link href={services.url}><Link2></Link2></Link></td>
+  {data.map((data) => (
+    <tr key={data.id} className="text-center border-b">
+      <td className="p-2">{data.name}</td>
+      <Badge className={`${data.status === 'UP'? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300":"bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"}`} >{data.status}</Badge>
+      <td className="p-2">{data.category}</td>
+      <td className="p-2 whitespace-nowrap">{data.last_ping}</td>
+      <td className="p-2 whitespace-nowrap">{data.response_time}</td>
+      <td className="p-2 text-blue-500"><Link href={data.url}><Link2></Link2></Link></td>
     </tr>
   ))}
 </tbody>

@@ -4,7 +4,7 @@ import { apiClient } from "../apiClient";
 import { search } from "@/types/dashboard"
 
 export const Summary = {
-  getSummary: async (): Promise<dashboard> => {
+  getDashboard: async (): Promise<dashboard> => {
     const res = await apiClient.get("/Dashboard");
     return res.data;
   },

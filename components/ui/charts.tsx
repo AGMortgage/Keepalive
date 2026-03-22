@@ -40,6 +40,7 @@ export default function Charts({  categories, services}: chartProps) {
             cx="50%"
             cy="50%"
             outerRadius={100}
+            innerRadius={70}
             dataKey="value"
             label
           >
@@ -51,7 +52,7 @@ export default function Charts({  categories, services}: chartProps) {
           <Legend />
         </PieChart>
       </ResponsiveContainer>
-    </div> {/* this was missing */}
+    </div>
 
     <div className="w-full md:w-1/2 bg-white rounded-lg p-4">
       <ResponsiveContainer width="100%" height={300}>

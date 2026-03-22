@@ -5,9 +5,9 @@ import Sidebar from "../components/ui/Sidebar";
 import "@/lib/fontawesome";
 import "./globals.css";
 import { SidebarProvider } from "@/Context/sidebarContext";
-import SummaryCard from "@/components/ui/summary_card";
-import { Summary } from "@/service/api/services/getSummary";
-const stats = await Summary.getSummary();
+import { PollingProvider } from "@/Context/pollingContext";
+
+
 const geistSans = Geist({
 
   variable: "--font-geist-sans",
@@ -44,11 +44,12 @@ export default function RootLayout({
         <SidebarProvider>
           
       <div className="md:order-3 row-span-full bg-[#f6f6f6] md:p-3 "><Sidebar /></div>
-      <div className="md:order-1 bg-[#f6f6f6]  md:h-fit  "><Header/><SummaryCard stats = {stats} /></div>
+      <div className="md:order-1 bg-[#f6f6f6]  md:h-fit  "><Header/></div>
+        <PollingProvider>
         <div className="md:order-4 md:overflow-y-auto ">  
         {children}
         </div>
-        
+        </PollingProvider>
          </SidebarProvider>
          </div>
       </body>

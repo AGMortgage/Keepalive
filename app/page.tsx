@@ -1,20 +1,25 @@
+"use client"
 import SearchBox from "@/components/ui/searchbox"
 import Charts from "@/components/ui/charts"
-import { Summary } from "@/service/api/services/getSummary"
-export default async function Dashboard() {
-    const categories = await Summary.getCategories()
-    const services = await Summary.getServices()
+
+import SummaryCard from "@/components/ui/summary_card";
+import { usePollingContext } from '@/Context/pollingContext';
+import Loader from '@/components/ui/loader '
+export default  function Dashboard() {
+    const {loading, pollCategories, pollServices} = usePollingContext()
     
- 
-    return  (
+ if (loading) return  <Loader />
+    return  (   
 
        <div className="bg-[#f6f6f6] px-5 ">
-        
+           
+            <div><SummaryCard /></div>
             <div className="pt-5">
-            <SearchBox categories={categories} services={services}/>
+            <SearchBox />
             </div>
+            
             <div className="pt-5">
-            <Charts categories={categories} services={services}/>
+            <Charts categories={pollCategories} services={pollServices}/>
             </div>
             
             </div>)

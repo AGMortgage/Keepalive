@@ -3,8 +3,8 @@
 export interface dashboard {
   totalServices: number
   totalChecks: number
-  latestChecksCount?: number
   latestChecks: latestCheck[]
+  services: Service[];
 }
 export type latestCheck = {
   id: string
@@ -31,7 +31,7 @@ export type Service = {
   name: string
   url: string
   category: string
-  status: "UP" | "DOWN"
+  status: string
   response_time: number
   last_ping: string
   is_active: boolean
