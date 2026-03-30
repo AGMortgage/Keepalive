@@ -1,7 +1,7 @@
 'use client';
-import { Button } from './button';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faBoltLightning } from '@fortawesome/free-solid-svg-icons';
 import { LayoutDashboard, List } from 'lucide-react';
 import { Breadcrumb, BreadcrumbItem } from './breadcrumb';
 import { useSidebar } from '@/Context/sidebarContext';
@@ -32,22 +32,25 @@ export default function Siderbarnav() {
     >
       <nav>
         <h1 className="mt-8 text-center md:mt-0 md:border-b-3 md:py-4">KEEP ALIVE</h1>
-        <Breadcrumb className="flex flex-col items-center mt-8 gap-4 px-4">
+        <Breadcrumb className="flex flex-col  mt-8 gap-4 px-4 md:pl-10">
           <BreadcrumbItem>
-            <Button variant="ghost">
-              Dashboard <LayoutDashboard />
-            </Button>
+            <Link href="/"  className='flex  '>
+            
+              <LayoutDashboard className='size-4  mt-1 mr-1' /> Dashboard
+               
+            </Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <Button variant="ghost">
+            <Link href="/service" >
+              
+              <FontAwesomeIcon icon={faBoltLightning} className="size-3.5" />
               Services
-              <FontAwesomeIcon icon={faChevronDown} className="size-3.5" />
-            </Button>
+            </Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <Button variant="ghost">
-              Ping History <List />
-            </Button>
+            <Link href="/" className='flex'>
+               <List className='size-4  mt-1 mr-1' /> Ping History
+            </Link>
           </BreadcrumbItem>
         </Breadcrumb>
       </nav>

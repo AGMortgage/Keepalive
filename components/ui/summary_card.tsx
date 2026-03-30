@@ -1,7 +1,5 @@
 "use client"
 
-
-import usePolling from "@/hooks/usePolling";
 import { usePollingContext } from '@/Context/pollingContext';
 
 
@@ -16,7 +14,7 @@ export default function SummaryCard () {
            <div className="grid 
                 grid-cols-[repeat(2,minmax(50px,1fr))]  
                 md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]  
-                pt-5 
+                
                 gap-2 px-3 mb-3 bg">
                
                 <div className="rounded-lg p-4 bg-white">

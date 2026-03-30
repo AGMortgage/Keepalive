@@ -38,10 +38,10 @@ export default function usePolling(){
 console.log("loading:", loading);
       
       useEffect(() => {
-    fetchData(); // 👈 call immediately on mount
+    fetchData(); 
 
     const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval); // 👈 cleanup on unmount
+    return () => clearInterval(interval); 
   }, []);
      
      return {pollServices, pollCategories, pollDashboard, loading}

@@ -11,9 +11,9 @@ export default  function Dashboard() {
  if (loading) return  <Loader />
     return  (   
 
-       <div className="bg-[#f6f6f6] px-5 ">
+       <div className="bg-[#f6f6f6] min-h-fit xl:h-screen md:px-4">
            
-            <div><SummaryCard /></div>
+            <div className="pt-5"><SummaryCard /></div>
             <div className="pt-5">
             <SearchBox />
             </div>

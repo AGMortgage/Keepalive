@@ -5,23 +5,25 @@ import { Input } from "./input"
 import { faSearch, faFilter,faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import { Button } from "./button"
 import { Badge } from "@/components/ui/badge"
-
+import { usePathname } from 'next/navigation';
 import { DropdownMenu,DropdownMenuContent,DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger, } from "./dropdown-menu";
-
-
 import { search } from "@/types/dashboard"
 import {  useState } from "react"
 import { Summary } from "@/service/api/services/getSummary"
 import { Link2 } from 'lucide-react';
 import { usePollingContext } from '@/Context/pollingContext';
+import { EllipsisVertical } from 'lucide-react';
+import { PencilIcon } from 'lucide-react';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 
 
 export default function SearchBox() {
+  const pathname = usePathname()
   const {pollServices,pollCategories } = usePollingContext()
-  
-  
+  const [category,setCategory] = useState<string | boolean >()
+  const [statusValue,setStatusvalue] = useState<string | boolean>()
   
   const [filteredServices, setFilteredServices] = useState<search[]>(pollServices);
 
@@ -39,14 +41,24 @@ export default function SearchBox() {
   
  
   const handleStatusClick = (status: string) => {
+  setCategory(false);
+  setStatusvalue(status)
   setFilteredServices(pollServices.filter((pollServices) => pollServices.status === status));
+  
 };  
  const handleCategoryClick = async (pollCategories : string) => {
     const data = await Summary.getByCategories(pollCategories);
-    setFilteredServices(data);}
+    setStatusvalue(false)
+    
+    setFilteredServices(data)
+    setCategory(pollCategories);}
+
+
+    
     
  const handleSearch = (value: string) => {
-  
+  setCategory(false);
+  setStatusvalue(false)
   setFilteredServices(
     !value.trim()
       ? pollServices
@@ -82,7 +94,7 @@ export default function SearchBox() {
                 <DropdownMenu>  
                   <DropdownMenuTrigger asChild > 
                     <Button variant="outline" className="mt-2 rounded-full " >
-                        Category <FontAwesomeIcon icon={faChevronDown} className="size-3.5" />
+                        Category{category ? `: ${category}` : ""} <FontAwesomeIcon icon={faChevronDown} className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger >
                     <DropdownMenuContent>
@@ -100,7 +112,7 @@ export default function SearchBox() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                     <Button  className="mt-2 rounded-full " >
-                        Status  <FontAwesomeIcon icon={faChevronDown} className="size-3.5" />
+                        Status {statusValue? `: ${statusValue}`: ""} <FontAwesomeIcon icon={faChevronDown} className="size-3.5" />
                     </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -119,7 +131,7 @@ export default function SearchBox() {
                
             </div>
             </div>
-             <div className="overflow-x-auto w-full border mt-2 rounded-lg bg-white md:mt-5 h-60 overflow-y-auto ">
+            <div className={`w-full border mt-2 rounded-lg bg-white md:mt-5  overflow-y-auto ${pathname === "/service" ? "overflow-x-visible h-fit" : "overflow-x-auto h-80"}`}>
                    <div className="sticky top-0 border-t-2 border-t-black bg-white z-10"></div>
                    <table className="w-full whitespace-nowrap ">
     <thead className="border-b-2 border-t-2 border-t-black sticky top-0 z-10 bg-white">
@@ -136,17 +148,35 @@ export default function SearchBox() {
   {data.map((data) => (
     <tr key={data.id} className="text-center border-b">
       <td className="p-2">{data.name}</td>
-      <Badge className={`${data.status === 'UP'? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300":"bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"}`} >{data.status}</Badge>
+      <td><Badge className={`${data.status === 'UP'? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300":"bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"}`} >{data.status}</Badge></td>
       <td className="p-2">{data.category}</td>
       <td className="p-2 whitespace-nowrap">{data.last_ping}</td>
       <td className="p-2 whitespace-nowrap">{data.response_time}</td>
       <td className="p-2 text-blue-500"><Link href={data.url}><Link2></Link2></Link></td>
+      <td className={`${pathname ==="/service"? "" : "hidden"}`}><DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline"><EllipsisVertical/></Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <PencilIcon/>Edit
+              
+            </DropdownMenuItem>
+            <DropdownMenuItem className='text-red-700'>
+              <FontAwesomeIcon icon={faTrash} className='text-red-700'/>Delete
+              
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+
+        </DropdownMenuContent>
+        </DropdownMenu></td>
     </tr>
   ))}
 </tbody>
-                    </table>
-                </div>
+          </table>
+      </div>
 
-        </div>
+</div>
     )
 }
